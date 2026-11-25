@@ -26,6 +26,8 @@
 | Text → video | turbo8 + native SLA | 10.1 s | 243 | **98.7 s** |
 | Text → video | turbo8 + native SLA | **15.1 s** | **362** | **167.4 s** |
 | Image → video | official int8 base + turbo8 LoRA (8 steps) | 3.04 s | 73 | **47.4 s** |
+| Image → video (**0.46 retest**) | `fl2va_pruned_int8` + turbo8 LoRA (8 steps) | 3.04 s | 73 | **47.1 s** |
+| Text → video (**0.46 retest**) | official `fl2va_pruned_int8`, 20 steps, no LoRA | 3.04 s | 73 | **34.6 s** |
 | Image → video (avoid) | base Q8 GGUF, 20 steps | 3.04 s | 73 | 986.9 s |
 | Article’s original `H3SLAAttention` graph | triton missing → dense | 10.1 s | 243 | 510.6 s |
 
@@ -95,6 +97,10 @@ Prefer the GUI? Drag `workflows/gui/H3_4step_VSA_T2V_1152x640_10s.json` into Com
 ### ③ Image → video
 
 Official `fl2va_pruned_int8` + `LoraLoaderModelOnly` turbo8 LoRA (strength 1.0), steps **8**, shift 12/3.
+
+### ④ Official base, 20 steps (`base20` preset / model set)
+
+Official `fl2va_pruned_int8`, no LoRA, steps **20**, shift 12/3, no sparse attention. Quality baseline to check whether the accelerated recipes degrade output; 3 s @ 640×352 measured **34.6 s** on 0.46.
 
 **Always:** width/height multiple of 32; `length` on the **17k+5** frame grid (73≈3 s, 124≈5 s, 243≈10.1 s, 362≈15.1 s); fps 24; short edge ≤ 768; 0.4–0.7 MP is the 16 GB sweet spot.
 

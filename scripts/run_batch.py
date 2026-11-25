@@ -54,6 +54,15 @@ PRESETS = {
         "steps": 8, "shift": (12.0, 3.0),
         "lora": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors", "i2v": True,
     },
+    # 官方基座、不加加速 LoRA：质量基线，速度约为 turbo8 的 2.5 倍耗时
+    "base20": {
+        "unet": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "te": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "vae": "minimax_h3_video_vae_int8_convrot.safetensors",
+        "audio_vae": "minimax_h3_audio_vae_fp32.safetensors",
+        "attention": None,
+        "steps": 20, "shift": (12.0, 3.0), "lora": None, "i2v": False,
+    },
 }
 
 

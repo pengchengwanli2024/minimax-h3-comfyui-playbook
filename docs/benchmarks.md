@@ -49,6 +49,21 @@ GGUF 慢的主因不是步数，而是：`sd.cpp` 兼容路径 + 16GB 显存放�
 | 可用内存最低 | ≈ 3 GB（64GB 总量） |
 | 采样耗时 | 4 步 ≈ 75 秒（≈19 s/step），VSA 生效日志：`VSA: extra_tokens ignored` |
 
+## ComfyUI 0.46.0 复测（2026-11-25）
+
+环境：ComfyUI **0.46.0**，同一台 RTX 4090 Laptop 16GB；权重换成 0.46 时代的新命名（`minimax_h3_fl2va_pruned_int8_convrot` + `qwen3vl_32b_minimax_h3_nvfp4_awq`）。测试期间 LM Studio 常驻占用约 7.6 GB 显存，因此数字属于**显存被挤压**的情况。
+
+| 任务 | 预设 | 权重 | steps | 帧数/时长 | 耗时 |
+|---|---|---|---|---|---|
+| 图生视频 | `i2v_turbo8` | `fl2va_pruned_int8` + turbo8 LoRA | 8 | 73 / 3.0s，640×352 | **47.1s** |
+| 文生视频 | `base20` | 官方 `fl2va_pruned_int8`（不加 LoRA） | 20 | 73 / 3.0s，640×352 | **34.6s** |
+
+结论：
+
+- 0.46 上 **i2v 的 47.1s 与 0.43 基线的 47.4s 基本一致**，说明升级没有带来明显性能回退；
+- `scripts/verify_workflow.py` 在 0.46 上正确识别出「两个 T2V 预设缺旧权重、i2v 预设齐备」——模型命名变化后先用它体检；
+- 这次没有重测「10 秒 / 0.7 MP」档位：显存被 LM Studio 占着，不足以跑到 0.43 基线的 243 帧配置。
+
 ## 复现方式
 
 ```bash

@@ -10,6 +10,8 @@
 | [bookstore.jpg](preview/bookstore.jpg) | `sla_bookstore_rain_10s.mp4` | 10.13s / 243 帧 | turbo8 + 原生 SLA | 102.4s |
 | [rainstreet.jpg](preview/rainstreet.jpg) | `h3_10s_1152x640.mp4` | 10.13s / 243 帧 | FastH3 4 步 VSA | 127.9s |
 | [pov.jpg](preview/pov.jpg) | `h3_pov_10s_1152x640.mp4` | 10.13s / 243 帧 | FastH3 4 步 VSA | 150.1s |
+| [i2v_046_turbo8_3s.jpg](preview/i2v_046_turbo8_3s.jpg) · [mp4](preview/i2v_046_turbo8_3s_preview.mp4) | `i2v_046_smoke_3s.mp4` | 3.04s / 73 帧 · **ComfyUI 0.46 复测** | fl2va_pruned_int8 + turbo8 LoRA（8 步） | 47.1s |
+| [t2v_046_base20_3s.jpg](preview/t2v_046_base20_3s.jpg) · [mp4](preview/t2v_046_base20_3s_preview.mp4) | `t2v_046_base20_3s.mp4` | 3.04s / 73 帧 · **ComfyUI 0.46 复测** | 官方 fl2va_pruned_int8（20 步，无 LoRA） | 34.6s |
 
 对应的提示词见 [prompts/examples.json](../prompts/examples.json)，参数见 [docs/parameters.md](../docs/parameters.md)。
 

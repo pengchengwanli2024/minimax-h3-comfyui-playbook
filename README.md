@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/pengchengwanli2024/minimax-h3-comfyui-playbook/actions/workflows/ci.yml/badge.svg)](https://github.com/pengchengwanli2024/minimax-h3-comfyui-playbook/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![ComfyUI](https://img.shields.io/badge/ComfyUI-0.43%20tested-blue)](docs/version-compat.md)
+[![ComfyUI](https://img.shields.io/badge/ComfyUI-0.43%20%7C%200.46-blue)](docs/version-compat.md)
 
 > 在一台 **RTX 4090 Laptop 16GB / 64GB RAM** 的 Windows 机器上，把 MiniMax H3（开源全模态视频模型，视频带原生立体声）跑通的完整记录：可用的参数组合、实测耗时、踩过的坑、批量出片脚本，以及和网上那篇「8GB 显存即可」教程的差异。
 >
@@ -42,6 +42,8 @@
 | 文生视频 | turbo8 + 原生 SLA（书店） | 10.1s | 243 | **102.4s** |
 | **文生视频** | turbo8 + 原生 SLA | **15.1s** | **362** | **167.4s** |
 | 图生视频 | 官方 int8 基座 + turbo8 LoRA（8 步） | 3.04s | 73 | **47.4s** |
+| 图生视频（**0.46 复测**） | `fl2va_pruned_int8` + turbo8 LoRA（8 步） | 3.04s | 73 | **47.1s** |
+| 文生视频（**0.46 复测**） | 官方 `fl2va_pruned_int8`，20 步、无 LoRA | 3.04s | 73 | **34.6s** |
 | 图生视频 | 基座 Q8 GGUF（20 步，不推荐） | 3.04s | 73 | 986.9s（16.5 分钟） |
 | 对照：文章原版 `H3SLAAttention` 工作流 | triton 缺失 → dense 回退 | 10.1s | 243 | 510.6s |
 
@@ -69,7 +71,7 @@
 
 ### 2. 下载模型（清单模式）
 
-`models.json` 里预置了三套组合：`turbo8_sla`（最快文生视频）、`fasth3_vsa`（官方 4 步蒸馏）、`i2v_turbo8`（图生视频）。
+`models.json` 里预置了四套组合：`turbo8_sla`（最快文生视频）、`fasth3_vsa`（官方 4 步蒸馏）、`i2v_turbo8`（图生视频）、`base20`（官方基座 20 步，质量基线）。
 
 ```bash
 # 看有哪些组合、各占多少空间
@@ -187,6 +189,14 @@ python scripts/bench.py prompts/examples.json --preset turbo8_sla \
 | `LoraLoaderModelOnly` | `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16`，强度 1.0 |
 | 步数 | **8**（加 LoRA 后）；不加 LoRA 用 20 步 |
 | shift | 12 / 3 |
+
+### ④ 官方基座 20 步（质量基线，`base20` 预设 / 模型组合）
+
+| 节点 | 取值 |
+|---|---|
+| `UNETLoader` | 官方 `minimax_h3_fl2va_pruned_int8_convrot`（不加 LoRA） |
+| 步数 | **20**（shift 12 / 3，不开稀疏注意力） |
+| 用途 | 判断「加速版是否掉质量」的对照；3 秒 640×352 实测 34.6 秒（0.46） |
 
 **通用**：宽高取 **32 的倍数**；`length` 必须落在 **17k+5** 帧网格上（73≈3s、124≈5s、243≈10.1s、362≈15.1s），fps 固定 **24**；短边 ≤768，0.4–0.7 MP 是 16GB 卡的舒适区。
 
