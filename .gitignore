@@ -1,0 +1,24 @@
+# 生成物 / 临时文件
+outputs/
+*.mp4
+!samples/preview/*.mp4
+*.part
+*.log
+*.log.err
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 模型权重（本仓库不分发）
+models/
+*.safetensors
+*.gguf

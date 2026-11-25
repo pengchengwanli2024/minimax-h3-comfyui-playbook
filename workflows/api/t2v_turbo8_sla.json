@@ -1,0 +1,140 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fused_refdelta_r1024_turbo8_mystic07_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "ModelAttentionBackend",
+    "inputs": {
+      "model": ["1", 0],
+      "attention": "comfy kitchen attention"
+    }
+  },
+  "3": {
+    "class_type": "BlockSparseAttention",
+    "inputs": {
+      "model": ["2", 0],
+      "selection": "sla",
+      "selection.keep_percent": 10.0,
+      "start_percent": 0.0,
+      "end_percent": 1.0,
+      "dense_blocks": "",
+      "min_tokens": 8192,
+      "extra_tokens": 256,
+      "sink_conditioning": "exact_kv_and_rows",
+      "verbose": true
+    }
+  },
+  "4": {
+    "class_type": "MiniMaxH3SigmaShift",
+    "inputs": {
+      "model": ["3", 0],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+    }
+  },
+  "5": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "6": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "8": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "prompt": "integrated_multimodal_description: [Shot 1] 电影感写实长镜头，清晨的地铁站台，白色瓷砖墙面与冷白光灯带，地面干净反光。一位背着帆布包的年轻女性站在黄线后等车，列车从画面深处高速进站，带起一阵风，她的围巾与发丝被风掀起，镜头从侧面中景缓慢横移并略微推进。\n\n[Shot 2] 列车停稳开门，她随人群走进车厢，镜头跟到车厢内部，暖白灯光与蓝色座椅，她抓住扶手，侧脸看向车窗外飞速掠过的隧道灯光，表情平静略显疲惫，车窗映出她的倒影。\n\n[Shot 3] 镜头慢慢靠近到近景，她轻轻呼一口气，车厢轻微晃动，扶手链条轻响，隧道灯光一排排从她脸上划过，最后她低头看了一眼手机，画面在一段安静的情绪里结束。\n\noverall_soundscape: 地铁进站的轰鸣与刹车气流声、报站广播（模糊人声）、车门开关提示音、车厢行驶的低频震动与轨道摩擦声、乘客衣物与扶手的轻微碰撞声。\n\nnon_diegetic_music: 极简的弦乐铺底，克制、城市感，不抢画面。\n\n风格要求：真实电影摄影，自然肤色与光影，稳定连续运镜，人物一致性高，不要闪烁、不要人物变形、不要面部漂移、不要手指畸形、不要快速切镜。",
+      "width": 1152,
+      "height": 640,
+      "length": 243,
+      "clip": ["5", 0],
+      "vae": ["6", 0]
+    }
+  },
+  "9": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 42
+    }
+  },
+  "10": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": ["4", 0],
+      "scheduler": "simple",
+      "steps": 4,
+      "denoise": 1.0
+    }
+  },
+  "11": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "12": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": ["4", 0],
+      "conditioning": ["8", 0]
+    }
+  },
+  "13": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["9", 0],
+      "guider": ["12", 0],
+      "sampler": ["11", 0],
+      "sigmas": ["10", 0],
+      "latent_image": ["8", 1]
+    }
+  },
+  "14": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["6", 0]
+    }
+  },
+  "15": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["7", 0]
+    }
+  },
+  "16": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": ["14", 0],
+      "audio": ["15", 0],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "17": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["16", 0],
+      "format": "auto",
+      "codec": "auto",
+      "filename_prefix": "video/h3_sla_subway"
+    }
+  }
+}

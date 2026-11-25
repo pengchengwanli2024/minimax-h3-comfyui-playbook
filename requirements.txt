@@ -1,0 +1,4 @@
+# 运行脚本所需依赖
+requests>=2.31      # download_models.py
+av>=12              # extract_frames.py / make_previews.py
+Pillow>=10          # make_previews.py（拼图）

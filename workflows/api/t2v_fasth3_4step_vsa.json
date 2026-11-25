@@ -1,0 +1,140 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fastvideo_vsa_datafree_1300step_4step_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "ModelAttentionBackend",
+    "inputs": {
+      "model": ["1", 0],
+      "attention": "comfy kitchen attention"
+    }
+  },
+  "3": {
+    "class_type": "BlockSparseAttention",
+    "inputs": {
+      "model": ["2", 0],
+      "selection": "vsa",
+      "selection.keep_percent": 10.0,
+      "start_percent": 0.2,
+      "end_percent": 1.0,
+      "dense_blocks": "",
+      "min_tokens": 12288,
+      "extra_tokens": 256,
+      "sink_conditioning": "exact_kv_and_rows",
+      "verbose": false
+    }
+  },
+  "4": {
+    "class_type": "MiniMaxH3SigmaShift",
+    "inputs": {
+      "model": ["3", 0],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+    }
+  },
+  "5": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "6": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "8": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "prompt": "integrated_multimodal_description: [Shot 1] 电影感写实长镜头，傍晚雨后的老城骑楼街道，青石板路面湿亮，倒映着暖黄路灯与远处红蓝霓虹。一位穿深灰风衣、撑黑伞的年轻女子从画面右侧缓步走入，脚步平稳，风衣下摆随走动轻轻摆动，伞沿不断有雨珠滴落。镜头从低机位缓慢向前推进并略微右移，保持连续不切镜，背景车流灯光虚化成柔和光斑，空气中有薄雾与细雨。\n\n[Shot 2] 她走到街口停下，稍微抬起伞，侧过脸望向街道尽头，表情安静若有所思，雨水顺着伞骨落下；一辆汽车从远处驶过，车灯扫过湿滑路面，光带在反光中快速滑过她的风衣。\n\n[Shot 3] 镜头继续缓慢靠近到中近景，她轻轻吐出一口气，白雾在冷空气中散开，手指在伞柄上略微收紧，然后转身继续向前走，身影逐渐融入街道暖光里。\n\noverall_soundscape: 细密而持续的雨声、伞面雨滴的轻响、她脚步踩在水洼里的轻微水声、远处车流与偶尔的车鸣、街道环境底噪，空间感真实、有远近层次。\n\nnon_diegetic_music: 极轻的钢琴与环境铺底，安静、克制，不抢画面。\n\n风格要求：真实电影摄影质感，自然肤色与光影，轻微胶片颗粒，浅景深但不过度虚化，稳定连续的运动，不要闪烁、不要人物变形、不要面部漂移、不要手指畸形、不要快速切镜与夸张运镜。",
+      "width": 1152,
+      "height": 640,
+      "length": 243,
+      "clip": ["5", 0],
+      "vae": ["6", 0]
+    }
+  },
+  "9": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 20261027
+    }
+  },
+  "10": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": ["4", 0],
+      "scheduler": "simple",
+      "steps": 4,
+      "denoise": 1.0
+    }
+  },
+  "11": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "12": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": ["4", 0],
+      "conditioning": ["8", 0]
+    }
+  },
+  "13": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["9", 0],
+      "guider": ["12", 0],
+      "sampler": ["11", 0],
+      "sigmas": ["10", 0],
+      "latent_image": ["8", 1]
+    }
+  },
+  "14": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["6", 0]
+    }
+  },
+  "15": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["7", 0]
+    }
+  },
+  "16": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": ["14", 0],
+      "audio": ["15", 0],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "17": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["16", 0],
+      "format": "auto",
+      "codec": "auto",
+      "filename_prefix": "video/h3_10s"
+    }
+  }
+}
