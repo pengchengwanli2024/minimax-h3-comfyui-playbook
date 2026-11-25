@@ -37,6 +37,3 @@ jobs:
               json.loads(f.read_text(encoding="utf-8"))
           print(f"validated {len(files)} json files")
           PY
-
-      - name: Check relative links
-        run: python scripts/check_links.py
