@@ -125,6 +125,10 @@ More: [docs/troubleshooting.md](docs/troubleshooting.md).
 - Model weights are **not** included; they follow their upstream licenses (MiniMax H3 Community License, Comfy-Org / FastVideo / Kijai / MATLOWAI) — see [NOTICE.md](NOTICE.md)
 - Sample clips are generated outputs, shown for demonstration
 
+## Related projects
+
+- [minimax-music3-toolkit](https://github.com/pengchengwanli2024/minimax-music3-toolkit) — a local MiniMax Music 3 creation workbench on the same 16 GB machine: lyrics → API workflow → batch generation → waveform preview
+
 ## Credits
 
 [ComfyUI](https://github.com/comfyanonymous/ComfyUI) · [MiniMax H3 docs](https://platform.minimax.io/docs/guides/local-deploy-h3) · [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3) · [FastVideo](https://github.com/hao-ai-lab/FastVideo) · [Kijai](https://huggingface.co/Kijai/MiniMax-H3-experimental) · [MATLOWAI](https://huggingface.co/MATLOWAI/minimax-h3-fused-turbo-int8-convrot)
