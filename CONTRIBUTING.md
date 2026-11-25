@@ -28,6 +28,7 @@ python -m compileall -q scripts tests
 python -m unittest discover -s tests -v
 python scripts/run_batch.py prompts/examples.json --dry-run --outdir /tmp/dryrun
 python scripts/download_models.py --list-sets
+python scripts/check_links.py            # Markdown 相对链接检查
 ```
 
 CI（GitHub Actions）会跑上面这些离线检查；需要 GPU 的实测不会在 CI 里跑。
