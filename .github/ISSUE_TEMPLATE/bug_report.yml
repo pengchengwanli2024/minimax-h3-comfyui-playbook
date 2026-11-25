@@ -1,0 +1,67 @@
+name: 🐛 Bug / 复现失败
+description: 生成失败、报错、画面异常、性能与预期不符
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量填全下面的信息——H3 的问题 90% 出在「权重 × 参数 × ComfyUI 版本」的组合上。
+  - type: dropdown
+    id: area
+    attributes:
+      label: 问题类型
+      options:
+        - 提交就被拒绝 / 校验失败（缺节点、缺模型）
+        - 运行时报错（OOM、triton、sd.cpp 等）
+        - 画面异常（网格伪影、闪烁、人物崩坏）
+        - 音频问题（没声音、声音糊）
+        - 性能不符（比文档慢很多）
+        - 文档/脚本错误
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: 你做了什么 / 期望什么 / 实际什么
+      placeholder: |
+        1. 用 prompts/examples.json 里的 XXX
+        2. --preset turbo8_sla
+        3. 10 秒 1152×640
+        期望约 100 秒出片，实际直接 OOM
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 关键日志 / 报错
+      description: 贴 `/history/<prompt_id>` 里的状态，或 ComfyUI 控制台最后 20 行
+      render: shell
+  - type: input
+    id: hardware
+    attributes:
+      label: 显卡 / 显存 / 内存
+      placeholder: RTX 4090 Laptop 16GB / 64GB RAM
+    validations:
+      required: true
+  - type: input
+    id: comfy
+    attributes:
+      label: ComfyUI 版本
+      placeholder: 0.43.0（启动日志里的 `ComfyUI version`）
+    validations:
+      required: true
+  - type: textarea
+    id: models
+    attributes:
+      label: 权重与参数
+      description: 跑的哪个权重、稀疏注意力方法、steps、shift、分辨率、帧数
+      placeholder: fl2va_pruned_int8 + turbo8 LoRA / 无稀疏 / steps=8 / shift 12-3 / 640×352 / 73 帧
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 自查
+      options:
+        - label: 我跑过 `python scripts/verify_workflow.py --server ... "workflows/api/*.json"`
+        - label: 我确认没有把 8 步 V2 的 shift（10/3）配到 4 步/turbo8 权重上
+        - label: 我确认不是别的程序占着显存（LM Studio、浏览器、游戏）

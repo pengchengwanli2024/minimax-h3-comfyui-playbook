@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 先查文档
+    url: https://github.com/pengchengwanli2024/minimax-h3-comfyui-playbook/blob/main/docs/troubleshooting.md
+    about: 报错、画面异常、性能不符，90% 的答案在这里
+  - name: ❓ FAQ
+    url: https://github.com/pengchengwanli2024/minimax-h3-comfyui-playbook/blob/main/docs/faq.md
+    about: 8GB 能跑吗？没声音？2K？商用？
+  - name: 🧩 版本兼容
+    url: https://github.com/pengchengwanli2024/minimax-h3-comfyui-playbook/blob/main/docs/version-compat.md
+    about: 升级 ComfyUI 后模型文件名对不上

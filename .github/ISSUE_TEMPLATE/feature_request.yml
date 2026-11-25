@@ -1,0 +1,39 @@
+name: ✨ 建议 / 新组合
+description: 新的模型组合、工作流、提示词、实测数据或脚本改进
+title: "[idea] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 建议类型
+      options:
+        - 新的模型组合（models.json）
+        - 新的工作流
+        - 新的提示词 / 提示词结构
+        - 新的实测数据（benchmark）
+        - 脚本 / 工具改进
+        - 文档改进
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你的建议
+      description: 它解决什么问题？在什么硬件上验证过？
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 实测数据（可选但强烈建议）
+      placeholder: |
+        GPU: RTX 4090 Laptop 16GB
+        ComfyUI: 0.46.0
+        权重: xxx
+        参数: steps=4 / shift 12-3 / 1152×640 / 243 帧
+        耗时: 112s
+  - type: input
+    id: links
+    attributes:
+      label: 相关链接（模型卡 / 工作流 / 讨论）
