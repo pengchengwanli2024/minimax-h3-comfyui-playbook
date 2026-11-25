@@ -204,6 +204,10 @@ PY
 - **模型权重**不在本仓库内，各自遵循其原始许可（MiniMax H3 Community License、Comfy-Org / FastVideo / Kijai / MATLOWAI 等），详见 [NOTICE.md](NOTICE.md)
 - 样片仅用于展示生成效果
 
+## 相关项目
+
+- [minimax-music3-toolkit](https://github.com/pengchengwanli2024/minimax-music3-toolkit) —— 同一台 16 GB 机器上的 MiniMax Music 3 本地创作工作台：歌词 → API 工作流 → 批量生成 → 波形预览
+
 ## 致谢
 
 [ComfyUI](https://github.com/comfyanonymous/ComfyUI) · [MiniMax H3 官方文档](https://platform.minimax.io/docs/guides/local-deploy-h3) · [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3) · [FastVideo](https://github.com/hao-ai-lab/FastVideo) · [Kijai](https://huggingface.co/Kijai/MiniMax-H3-experimental) · [MATLOWAI](https://huggingface.co/MATLOWAI/minimax-h3-fused-turbo-int8-convrot) · 以及 ComfyUI 社区早期的 H3 参数探索
