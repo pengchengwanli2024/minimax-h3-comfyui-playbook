@@ -10,6 +10,9 @@
 - **ComfyUI 0.46.0 复测**：`i2v_turbo8` 图生视频 3 秒 **47.1s**（0.43 基线 47.4s）、`base20` 文生视频 3 秒 **34.6s**（测试时 LM Studio 常驻占 7.6 GB 显存）
 - 新预设 / 模型组合 **`base20`**：官方 `fl2va_pruned_int8` 跑 20 步、不开加速 LoRA，作为质量基线
 - 0.46 复测样片预览（`samples/preview/i2v_046_turbo8_3s*`、`t2v_046_base20_3s*`）
+- **3 个可编辑的 GUI 工作流**：`H3_turbo8_sla_T2V_1152x640_10s.json`（turbo8 + 原生 SLA）、`H3_4step_VSA_T2V_1152x640_10s.json`（4 步 VSA）、**`H3_turbo8_i2v_1152x640_3s.json`（图生视频，`LoadImage` 接首帧、8 步出片）**；清掉官方模板里陈旧的 `properties.models` 元数据，说明节点全部改成中文
+- `tests/test_gui_workflows.py`：GUI 工作流结构 / 模型文件名与 `models.json` 一致 / 图生视频接线 / 说明节点自检
+- `verify_workflow.py --static` 增强：GUI 格式现在也校验子图内部的 nodes/links 引用与实例节点指向的子图
 - Issue 模板（Bug / 建议）+ PR 模板 + 本 CHANGELOG
 
 ### 变更

@@ -21,7 +21,7 @@
 这个仓库是**实测之后的修正版**：
 
 - ✅ 三套**验证过**的参数组合（4 步 VSA / 8 步 turbo LoRA / 原生 SLA），附实测耗时
-- ✅ 开箱可用的 API 工作流 + 一个改好的 GUI 工作流
+- ✅ 4 个 API 工作流 + **3 个可直接编辑的 GUI 工作流**（4 步 VSA 文生视频 / turbo8+SLA 文生视频 / turbo8 图生视频）
 - ✅ 批量出片脚本 + 基准测试脚本 + 工作流自检脚本
 - ✅ 模型清单（`models.json`）与多线程下载器（断点续传 + hf-mirror）
 - ✅ 踩坑清单：triton 缺失、GGUF `sd.cpp` 兼容模式、17k+5 帧网格、shift 10/3 vs 12/3、显存与内存实测
@@ -124,11 +124,21 @@ python scripts/run_batch.py prompts/examples.json --outdir ./outputs
 
 `prompts/examples.json` 里每条任务就是 `name / prompt / length / width / height / steps / seed`。
 
-**B. ComfyUI 界面**
+**B. ComfyUI 界面（可编辑的 GUI 工作流）**
 
-把 `workflows/gui/H3_4step_VSA_T2V_1152x640_10s.json` 拖进 ComfyUI（或「工作流 → 打开」），检查三个下拉框指向你实际下载的模型文件，然后 Queue。这个文件基于 ComfyUI 官方 FastH3 模板修改：权重、文本编码器、步数、shift、分辨率、时长、提示词都已配好。
+`workflows/gui/` 里是三个按 16 GB 实测调好的工作流，拖进 ComfyUI（或「工作流 → 打开」）就能用：
 
-API 版工作流在 `workflows/api/`：
+| 文件 | 任务 | 默认参数 |
+|---|---|---|
+| `H3_turbo8_sla_T2V_1152x640_10s.json` | 文生视频 · 最快 | turbo8 融合权重 + 原生 SLA，4 步，10 秒 |
+| `H3_4step_VSA_T2V_1152x640_10s.json` | 文生视频 · 官方蒸馏版 | FastH3 4 步 VSA，10 秒 |
+| `H3_turbo8_i2v_1152x640_3s.json` | **图生视频（首帧）** | 官方 int8 基座 + turbo8 LoRA，8 步，3 秒 |
+
+打开后先检查子图里的模型下拉框是否指向你实际下载的文件，然后 Queue。三个文件都是**可直接编辑**的：双击中间的子图节点进入内部，可以改权重、步数、shift、采样器；画布上的 `ResolutionSelector` 改分辨率，`duration` 改时长（秒，帧数自动吸附到 17k+5 网格）。
+
+**图生视频怎么用**：打开 `H3_turbo8_i2v_1152x640_3s.json`，在 `LoadImage` 节点上传首帧图片（默认文件名 `first_frame.png`），提示词里用 `<Picture 1>` 指代它；把子图上的 `turbo_mode` 关掉，就切换到官方 20 步基座做质量对照。
+
+API 版工作流在 `workflows/api/`（批量脚本用）：
 
 | 文件 | 用途 |
 |---|---|

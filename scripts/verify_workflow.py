@@ -92,8 +92,24 @@ def api_problems(wf: dict) -> list[str]:
     return problems
 
 
+SUBGRAPH_ENDS = {-10, -20}  # GUI 格式里子图的输入/输出伪节点 id
+UUID_RE = __import__("re").compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+
+
+def _node_links_exist(nodes: list, link_ids: set, where: str) -> list[str]:
+    problems: list[str] = []
+    for node in nodes:
+        node_id = node.get("id")
+        for kind in ("inputs", "outputs"):
+            for slot in node.get(kind) or []:
+                for link_id in (slot.get("link"), *(slot.get("links") or [])):
+                    if link_id is not None and link_id not in link_ids:
+                        problems.append(f"{where}节点 {node_id} 引用了不存在的连线 {link_id}")
+    return problems
+
+
 def gui_problems(wf: dict) -> list[str]:
-    """GUI 格式：nodes 的 id 唯一、links 两端都指向存在的节点。"""
+    """GUI 格式：nodes/links 与子图内部的引用都要自洽。"""
     problems: list[str] = []
     nodes = wf.get("nodes") or []
     if not nodes:
@@ -106,15 +122,50 @@ def gui_problems(wf: dict) -> list[str]:
         ids.add(node_id)
         if not node.get("type"):
             problems.append(f"节点 {node_id} 缺 type")
+    link_ids: set = set()
     for link in wf.get("links") or []:
         if not isinstance(link, list) or len(link) < 5:
             problems.append(f"links 条目格式异常: {link!r}")
             continue
         link_id, src, _src_slot, dst, _dst_slot = link[:5]
+        link_ids.add(link_id)
         if src not in ids:
             problems.append(f"links 条目 {link_id} 的起点节点 {src} 不存在")
         if dst not in ids:
             problems.append(f"links 条目 {link_id} 的终点节点 {dst} 不存在")
+    problems += _node_links_exist(nodes, link_ids, "")
+
+    subgraphs = (wf.get("definitions") or {}).get("subgraphs") or []
+    subgraph_ids = {sg.get("id") for sg in subgraphs}
+    for node in nodes:
+        node_type = str(node.get("type") or "")
+        if UUID_RE.match(node_type) and node_type not in subgraph_ids:
+            problems.append(f"节点 {node.get('id')} 引用了不存在的子图 {node_type}")
+
+    for sg in subgraphs:
+        name = sg.get("name") or sg.get("id")
+        sg_nodes = sg.get("nodes") or []
+        sg_ids = {n.get("id") for n in sg_nodes}
+        if not sg_nodes:
+            problems.append(f"子图 {name} 没有 nodes")
+            continue
+        for node in sg_nodes:
+            if not node.get("type"):
+                problems.append(f"子图 {name} 的节点 {node.get('id')} 缺 type")
+        sg_links = sg.get("links") or []
+        sg_link_ids = set()
+        for link in sg_links:
+            if not isinstance(link, dict):
+                problems.append(f"子图 {name} 的连线格式异常: {link!r}")
+                continue
+            sg_link_ids.add(link.get("id"))
+            for key in ("origin_id", "target_id"):
+                nid = link.get(key)
+                if nid in SUBGRAPH_ENDS:
+                    continue
+                if nid not in sg_ids:
+                    problems.append(f"子图 {name} 的连线 {link.get('id')} {key}={nid} 不存在")
+        problems += _node_links_exist(sg_nodes, sg_link_ids, f"子图 {name} 的")
     return problems
 
 

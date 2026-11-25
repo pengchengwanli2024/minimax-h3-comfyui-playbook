@@ -36,6 +36,28 @@ class StaticCheckTests(unittest.TestCase):
     def test_unknown_format_is_reported(self):
         self.assertTrue(vw.static_problems({"hello": "world"}))
 
+    def test_gui_subgraph_dangling_link_is_reported(self):
+        wf = {
+            "nodes": [{"id": 1, "type": "X"}],
+            "links": [],
+            "definitions": {"subgraphs": [{
+                "id": "4c314f31-ecda-4b08-ae98-faaba1bf613f",
+                "name": "sg",
+                "nodes": [{"id": 2, "type": "A"}],
+                "links": [{"id": 1, "origin_id": 2, "target_id": 99, "type": "MODEL"}],
+            }]},
+        }
+        problems = vw.static_problems(wf)
+        self.assertTrue(any("99" in p for p in problems), problems)
+
+    def test_gui_instance_with_unknown_subgraph_is_reported(self):
+        wf = {
+            "nodes": [{"id": 1, "type": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"}],
+            "links": [],
+        }
+        problems = vw.static_problems(wf)
+        self.assertTrue(any("子图" in p for p in problems), problems)
+
 
 if __name__ == "__main__":
     unittest.main()

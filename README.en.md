@@ -38,7 +38,7 @@ Full logs and per-run details: [docs/benchmarks.md](docs/benchmarks.md).
 | Path | Contents |
 |---|---|
 | `workflows/api/` | 4 runnable API workflows (`t2v_turbo8_sla`, `t2v_fasth3_4step_vsa`, `i2v_turbo8_lora`, `t2v_smoke_3s`) |
-| `workflows/gui/` | A patched GUI workflow based on ComfyUI’s official FastH3 template |
+| `workflows/gui/` | 3 editable GUI workflows: turbo8+SLA T2V, 4-step VSA T2V, turbo8 image-to-video |
 | `scripts/run_batch.py` | Batch generation from a JSON job list (three presets, dry-run, downloads results via `/view`) |
 | `scripts/download_models.py` | Multi-threaded ranged downloader with resume + hf-mirror; `--set` from `models.json`, `--check` to verify local files |
 | `scripts/bench.py` | Runs a job set and writes a Markdown timing table |
@@ -76,7 +76,15 @@ python scripts/verify_workflow.py --static "workflows/api/*.json" "workflows/gui
 python scripts/run_batch.py prompts/examples.json --outdir ./outputs
 ```
 
-Prefer the GUI? Drag `workflows/gui/H3_4step_VSA_T2V_1152x640_10s.json` into ComfyUI, fix the three model dropdowns, press Queue.
+Prefer the GUI? These three workflows open in ComfyUI and stay fully editable (double-click the subgraph node to change weights, steps, shift; use `ResolutionSelector` and `duration` on the canvas):
+
+| File | Task | Defaults |
+|---|---|---|
+| `H3_turbo8_sla_T2V_1152x640_10s.json` | Text → video, fastest | turbo8 fused weights + native SLA, 4 steps, 10 s |
+| `H3_4step_VSA_T2V_1152x640_10s.json` | Text → video, official distillation | FastH3 4-step VSA, 10 s |
+| `H3_turbo8_i2v_1152x640_3s.json` | **Image → video** | official int8 base + turbo8 LoRA, 8 steps, 3 s |
+
+For image-to-video, load your first frame in the `LoadImage` node (default file name `first_frame.png`) and refer to it as `<Picture 1>` in the prompt; switch `turbo_mode` off to compare against the official 20-step base.
 
 ## Parameter cards
 
