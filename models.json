@@ -1,0 +1,98 @@
+{
+  "$comment": "模型清单：download_models.py --set <name> 使用。path 是仓库内相对路径，dest 是本地模型目录下的相对路径。size_gb 为参考大小，--check 时按 ±2% 容差校验。",
+  "sets": {
+    "turbo8_sla": {
+      "description": "文生视频最快组合：社区 turbo8 int8 权重 + 原生 SLA 稀疏注意力（10 秒约 100 秒）",
+      "files": [
+        {
+          "repo": "MATLOWAI/minimax-h3-fused-turbo-int8-convrot",
+          "path": "diffusion_models/minimax_h3_fused_refdelta_r1024_turbo8_mystic07_int8_convrot.safetensors",
+          "dest": "diffusion_models/minimax_h3_fused_refdelta_r1024_turbo8_mystic07_int8_convrot.safetensors",
+          "size_gb": 19.5
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "dest": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "size_gb": 14.6
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "dest": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "size_gb": 2.95
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "dest": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "size_gb": 0.56
+        }
+      ]
+    },
+    "fasth3_vsa": {
+      "description": "FastH3 官方 4 步 VSA-DataFree 蒸馏权重（只支持文生视频+音频）",
+      "files": [
+        {
+          "repo": "Kijai/MiniMax-H3-experimental",
+          "path": "minimax_h3_fastvideo_vsa_datafree_1300step_4step_int8_convrot.safetensors",
+          "dest": "diffusion_models/minimax_h3_fastvideo_vsa_datafree_1300step_4step_int8_convrot.safetensors",
+          "size_gb": 21.3
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "dest": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "size_gb": 14.6
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "dest": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "size_gb": 2.95
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "dest": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "size_gb": 0.56
+        }
+      ]
+    },
+    "i2v_turbo8": {
+      "description": "图生视频：官方 int8 基座 + turbo8 LoRA（8 步，3 秒片约 47 秒）",
+      "files": [
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "dest": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "size_gb": 19.5
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+          "dest": "loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+          "size_gb": 1.8
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "dest": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "size_gb": 14.6
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "dest": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "size_gb": 2.95
+        },
+        {
+          "repo": "Comfy-Org/MiniMax-H3",
+          "path": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "dest": "vae/minimax_h3_audio_vae_fp32.safetensors",
+          "size_gb": 0.56
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install requests
+
+      - name: Syntax check
+        run: python -m compileall -q scripts tests
+
+      - name: Offline unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Dry-run batch builder
+        run: python scripts/run_batch.py prompts/examples.json --dry-run --outdir /tmp/dryrun
+
+      - name: Validate JSON assets
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          files = list(pathlib.Path(".").rglob("*.json"))
+          for f in files:
+              if ".git" in f.parts:
+                  continue
+              json.loads(f.read_text(encoding="utf-8"))
+          print(f"validated {len(files)} json files")
+          PY
