@@ -84,7 +84,7 @@ Prefer the GUI? These three workflows open in ComfyUI and stay fully editable (d
 | `H3_4step_VSA_T2V_1152x640_10s.json` | Text → video, official distillation | FastH3 4-step VSA, 10 s |
 | `H3_turbo8_i2v_1152x640_3s.json` | **Image → video** | official int8 base + turbo8 LoRA, 8 steps, 3 s |
 
-For image-to-video, load your first frame in the `LoadImage` node (default file name `first_frame.png`) and refer to it as `<Picture 1>` in the prompt; switch `turbo_mode` off to compare against the official 20-step base.
+For image-to-video, load your first frame in the `LoadImage` node (default file name `first_frame.png`) and refer to it as `<Picture 1>` in the prompt; switch `turbo_mode` off to compare against the official 20-step base. The subgraph also exposes `last_frame`; connect a second image there for first→last-frame transitions.
 
 ## Parameter cards
 

@@ -136,7 +136,7 @@ python scripts/run_batch.py prompts/examples.json --outdir ./outputs
 
 打开后先检查子图里的模型下拉框是否指向你实际下载的文件，然后 Queue。三个文件都是**可直接编辑**的：双击中间的子图节点进入内部，可以改权重、步数、shift、采样器；画布上的 `ResolutionSelector` 改分辨率，`duration` 改时长（秒，帧数自动吸附到 17k+5 网格）。
 
-**图生视频怎么用**：打开 `H3_turbo8_i2v_1152x640_3s.json`，在 `LoadImage` 节点上传首帧图片（默认文件名 `first_frame.png`），提示词里用 `<Picture 1>` 指代它；把子图上的 `turbo_mode` 关掉，就切换到官方 20 步基座做质量对照。
+**图生视频怎么用**：打开 `H3_turbo8_i2v_1152x640_3s.json`，在 `LoadImage` 节点上传首帧图片（默认文件名 `first_frame.png`），提示词里用 `<Picture 1>` 指代它；把子图上的 `turbo_mode` 关掉，就切换到官方 20 步基座做质量对照。另外子图还暴露了 `last_frame` 输入：再接一张尾帧图就是**首尾帧过渡**（flf2v）。
 
 API 版工作流在 `workflows/api/`（批量脚本用）：
 
