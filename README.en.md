@@ -69,6 +69,8 @@ python scripts/download_models.py --check --set turbo8_sla --dest "D:/models/com
 
 # 3) check a workflow against the running server, then generate
 python scripts/verify_workflow.py --server http://127.0.0.1:8188 "workflows/api/*.json"
+#    offline structural check (also runs in CI)
+python scripts/verify_workflow.py --static "workflows/api/*.json" "workflows/gui/*.json"
 python scripts/run_batch.py prompts/examples.json --outdir ./outputs
 ```
 

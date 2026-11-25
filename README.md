@@ -110,8 +110,11 @@ python scripts/download_models.py --check --set turbo8_sla --dest "D:/models/com
 **A. 批量脚本（推荐）**
 
 ```bash
-# 先自检：工作流里的节点/模型是否都在
+# 先自检：工作流里的节点/模型是否都在（需要 ComfyUI 在跑）
 python scripts/verify_workflow.py --server http://127.0.0.1:8188 "workflows/api/*.json"
+
+# 不想先启 ComfyUI 也可以只做结构检查（CI 同款，纯离线）
+python scripts/verify_workflow.py --static "workflows/api/*.json" "workflows/gui/*.json"
 
 # 批量出片（默认 turbo8_sla 预设；结果通过 /view 下载到 --outdir）
 python scripts/run_batch.py prompts/examples.json --outdir ./outputs

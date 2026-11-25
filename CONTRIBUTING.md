@@ -7,7 +7,7 @@
 | 类型 | 位置 | 要求 |
 |---|---|---|
 | 新的模型组合 | `models.json` | 给出 HF 仓库、仓库内路径、本地目标路径、参考大小；说明用途与实测耗时 |
-| 新的工作流 | `workflows/api/`（或 `workflows/gui/`） | API 格式需通过 `scripts/verify_workflow.py`；GUI 工作流请基于官方模板修改 |
+| 新的工作流 | `workflows/api/`（或 `workflows/gui/`） | API 格式需通过 `scripts/verify_workflow.py --static`（离线结构检查）；GUI 工作流请基于官方模板修改 |
 | 新的提示词 | `prompts/examples.json` | 用 `integrated_multimodal_description / overall_soundscape / non_diegetic_music` 结构；长度落在 17k+5 网格 |
 | 新的实测数据 | `docs/benchmarks.md` | 注明 GPU、RAM、ComfyUI 版本、权重、分辨率、帧数、是否首次加载 |
 | 排错条目 | `docs/troubleshooting.md` | 「现象 → 原因 → 解决」三段式，附关键日志行 |
@@ -27,6 +27,7 @@ pip install requests av Pillow          # 只用得到 requests 跑单元测试
 python -m compileall -q scripts tests
 python -m unittest discover -s tests -v
 python scripts/run_batch.py prompts/examples.json --dry-run --outdir /tmp/dryrun
+python scripts/verify_workflow.py --static "workflows/api/*.json" "workflows/gui/*.json"
 python scripts/download_models.py --list-sets
 ```
 
